@@ -46,7 +46,7 @@ public class BOJ_10828_스택 {
     }
 
     private static int pop() {
-        if (idx < 0) {
+        if (size() == 0) {
             return -1;
         }
         return stack[idx--];
