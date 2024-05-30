@@ -18,34 +18,42 @@ public class BOJ_2346_풍선터뜨리기 {
         StringBuilder sb = new StringBuilder();
 
         int N = Integer.parseInt(br.readLine());
-        Deque<Balloon> deque = new ArrayDeque<>();
+        Deque<Balloon> dq = new ArrayDeque<>();
 
         StringTokenizer st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
-            deque.offerLast(new Balloon(i + 1, Integer.parseInt(st.nextToken())));
+            dq.add(new Balloon(i + 1, Integer.parseInt(st.nextToken())));
         }
 
-        Balloon first = deque.pollFirst();
+        // 첫 풍선 터트리고 시작
+        Balloon first = dq.pollFirst();
         int num = first.num;
         sb.append(first.idx).append(" ");
-        while (!deque.isEmpty()) {
-            // 음수인 경우, 양수인 경우에 따라 처리가 다름
-            Balloon next = null;
-            if (num < 0) {
-                for (int i = 0; i < -num; i++) {
-                    deque.offerFirst(deque.pollLast());
-                }
-                next = deque.pollFirst();
-                num = next.num;
 
-            } else {
-                for (int i = 0; i < num; i++) {
-                    deque.offerLast(deque.pollFirst());
+        while (!dq.isEmpty()) {
+            Balloon now = null;
+
+            if (num < 0) {
+                // 음수인 경우 왼쪽으로 이동하는 것을 구현 -> 덱의 뒤에서 빼서 앞으로 옮긴다.
+                for (int i = 0; i < -num; i++) {
+                    dq.offerFirst(dq.pollLast());
                 }
-                next = deque.pollLast();
-                num = next.num;
+
+                // 왼쪽으로 이동할 경우, 터져야 할 풍선은 현재 맨 뒤에 위치함
+                now = dq.pollFirst();
+                num = now.num;
+            } else {
+                // 양수인 경우 오른쪽으로 이동하는 것을 구현 -> 덱의 앞에서 빼서 뒤로 옮긴다.
+                for (int i = 0; i < num; i++) {
+                    dq.offerLast(dq.pollFirst());
+                }
+
+                // 오른쪽으로 이동할 경우, 터져야 할 풍선은 현재 맨 앞에 위치함
+                now = dq.pollLast();
+                num = now.num;
             }
-            sb.append(next.idx).append(" ");
+
+            sb.append(now.idx).append(" ");
         }
 
         System.out.println(sb);
