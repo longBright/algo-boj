@@ -20,9 +20,9 @@ public class BOJ_2696_중앙값구하기 {
 
         int T = Integer.parseInt(br.readLine());
         while (T-- > 0) {
-            // 최대힙과 최소힙 두개 사용. 최소힙은 내림차순 정렬, 최대힙은 오름차순 정렬 => 중앙값 접근
-            PriorityQueue<Integer> maxHeap = new PriorityQueue<>();
-            PriorityQueue<Integer> minHeap = new PriorityQueue<>(Collections.reverseOrder());
+            // 최대힙과 최소힙 두개 사용. 최대힙은 내림차순 정렬, 최소힙은 오름차순 정렬 => 중앙값 접근
+            PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+            PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
 
             // 출력하는 중앙값의 개수 == (수열의 크기 / 2) + 1
             int M = Integer.parseInt(br.readLine());
@@ -39,19 +39,20 @@ public class BOJ_2696_중앙값구하기 {
                 // 두 힙의 크기가 같으면 홀수번째 숫자 -> 최대힙에 저장
                 // 두 힙의 크기가 다르면 짝수번째 숫자 -> 최소힙에 저장
                 int num = Integer.parseInt(st.nextToken());
-                if (minHeap.size() == maxHeap.size()) {
+                if (maxHeap.size() == minHeap.size()) {
                     maxHeap.offer(num);
                 } else {
                     minHeap.offer(num);
                 }
 
-                // 입력마다 최소 힙의 최댓값과 최소 힙의 최솟값을 비교
-                // 최소 힙의 최댓값이 최대 힙의 최솟값보다 큰 경우, 최소 힙의 최댓값은 최대 힙의 최솟값보다 작아야하므로 스왑
-                if (!maxHeap.isEmpty() && !minHeap.isEmpty()) {
-                    if (minHeap.peek() > maxHeap.peek()) {
-                        int temp = maxHeap.poll();
-                        maxHeap.offer(minHeap.poll());
-                        minHeap.offer(temp);
+                // 입력마다 최소 힙의 최솟값과 최대 힙의 최댓값을 비교
+                // 최대 힙은 중앙 값 이하의 숫자만 가져야 한다. 즉, 최대 힙의 모든 값은 최소 힙의 모든 값보다 작아야 함
+                // 그러므로 최대 힙의 최댓값과 최소 힙의 최솟값을 스왑해준다.
+                if (!minHeap.isEmpty() && !maxHeap.isEmpty()) {
+                    if (maxHeap.peek() > minHeap.peek()) {
+                        int temp = minHeap.poll();
+                        minHeap.offer(maxHeap.poll());
+                        maxHeap.offer(temp);
                     }
                 }
 
